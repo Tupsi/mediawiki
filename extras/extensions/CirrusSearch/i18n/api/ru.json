@@ -6,8 +6,7 @@
 			"Katunchik",
 			"Movses",
 			"Okras",
-			"Putnik",
-			"Dirruw'o"
+			"Putnik"
 		]
 	},
 	"apihelp-cirrus-config-dump-description": "Дамп конфигурации CirrusSearch.",
