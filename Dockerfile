@@ -10,6 +10,8 @@ RUN pecl install redis \
       && mv composer.phar /usr/local/bin/composer \
       && chmod +x /usr/local/bin/composer \
       && composer update --no-dev -d /var/www/html/ \
+      && composer update --no-dev -d /var/www/html/extensions/Elastica \
+      && composer update --no-dev -d /var/www/html/extensions/CirrusSearch \
       && chown -R www-data:www-data /var/www/html/extensions \
       && rm -rf \
          /tmp/* \
