@@ -1,10 +1,6 @@
-FROM mediawiki:lts
-COPY composer.local.json /var/www/html/composer.local.json
-RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/www/html/extensions/Elastica \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch /var/www/html/extensions/CirrusSearch \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /var/www/html/extensions/Disambiguator \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /var/www/html/extensions/NoTitle \
-      && pecl install redis \
+FROM mediawiki:1.39
+COPY /extras /var/www/html/
+RUN pecl install redis \
       && chown 1000:1000 /var/www/html/composer.local.json \
       && docker-php-ext-enable redis \
       && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
@@ -14,8 +10,8 @@ RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/
       && mv composer.phar /usr/local/bin/composer \
       && chmod +x /usr/local/bin/composer \
       && composer update --no-dev -d /var/www/html/ \
-      && composer update --no-dev -d /var/www/html/extensions/CirrusSearch/ \
-      && composer update --no-dev -d /var/www/html/extensions/Elastica/ \
-      && rm -f /tmp/*.tar.gz \
-      && chown -R www-data:www-data /var/www/html/extensions
+      && chown -R www-data:www-data /var/www/html/extensions \
+      && rm -rf \
+         /tmp/* \
+         /var/lib/apt/lists/*
 WORKDIR /var/www/html
