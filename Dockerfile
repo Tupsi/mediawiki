@@ -1,9 +1,9 @@
 FROM mediawiki:1.39.12
 COPY composer.local.json /var/www/html/composer.local.json
-RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/www/html/extensions/Elastica \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch /var/www/html/extensions/CirrusSearch \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /var/www/html/extensions/Disambiguator \
-      && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /var/www/html/extensions/NoTitle \
+RUN git clone -b REL1_39 --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/www/html/extensions/Elastica \
+      && git clone -b REL1_39 --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch /var/www/html/extensions/CirrusSearch \
+      && git clone -b REL1_39 --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /var/www/html/extensions/Disambiguator \
+      && git clone -b REL1_39 --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /var/www/html/extensions/NoTitle \
       && pecl install redis \
       && chown 1000:1000 /var/www/html/composer.local.json \
       && docker-php-ext-enable redis \
