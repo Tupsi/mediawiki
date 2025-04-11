@@ -1,4 +1,4 @@
-FROM mediawiki:lts
+FROM mediawiki:1.39
 COPY composer.local.json /var/www/html/composer.local.json
 RUN git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/www/html/extensions/Elastica \
       && git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/CirrusSearch /var/www/html/extensions/CirrusSearch \
