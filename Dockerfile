@@ -1,3 +1,4 @@
+# https://hub.docker.com/_/mediawiki
 FROM mediawiki:1.43
 COPY composer.local.json /var/www/html/composer.local.json
 RUN git clone -b REL1_43 --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Elastica /var/www/html/extensions/Elastica \
