@@ -15,9 +15,9 @@ COPY --chown=www-data:www-data --from=extensions /tmp/extensions /var/www/html/e
 #RUN pecl install redis \
 #    && chown 1000:1000 /var/www/html/composer.local.json \
 #    && docker-php-ext-enable redis \
-RUN composer update --no-dev -d /var/www/html/
+RUN composer update --no-interaction --no-dev --prefer-source -d /var/www/html/ \
 #    && composer update --no-dev -d /var/www/html/extensions/CirrusSearch/ \
 #    && composer update --no-dev -d /var/www/html/extensions/Elastica/ \
 #    && rm -f /tmp/*.tar.gz \
-#    && chown -R www-data:www-data /var/www/html/extensions
+    && chown -R www-data:www-data /var/www/html/extensions
 WORKDIR /var/www/html
