@@ -1,5 +1,5 @@
 ENV MEDIAWIKI_MAJOR_VERSION=1.43
-ENV MEDIAWIKI_VERSION=1.43.6
+ENV MEDIAWIKI_VERSION=1.43.8
 
 FROM alpine AS extensions
 RUN mkdir -p /tmp/extensions /tmp/skins \
