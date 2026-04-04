@@ -1,14 +1,14 @@
-ARG MEDIAWIKI_MAJOR_VERSION=1.43
+ARG MEDIAWIKI_BRANCH=REL1_43
 ARG MEDIAWIKI_VERSION=1.43.8
 
 FROM alpine AS extensions
-ARG MEDIAWIKI_MAJOR_VERSION
+ARG MEDIAWIKI_BRANCH
 RUN mkdir -p /tmp/extensions /tmp/skins \
     && apk update \
     && apk add git \
     # Extensions
-    && git clone -b REL${MEDIAWIKI_MAJOR_VERSION} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /tmp/extensions/Disambiguator \
-    && git clone -b REL${MEDIAWIKI_MAJOR_VERSION} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /tmp/extensions/NoTitle \
+    && git clone -b ${MEDIAWIKI_BRANCH} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /tmp/extensions/Disambiguator \
+    && git clone -b ${MEDIAWIKI_BRANCH} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /tmp/extensions/NoTitle \
     # Citizen Skin hinzufügen
     && git clone https://github.com/StarCitizenTools/mediawiki-skins-Citizen.git /tmp/skins/Citizen
 
