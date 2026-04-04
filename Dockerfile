@@ -1,4 +1,8 @@
+ARG MEDIAWIKI_MAJOR_VERSION=1.43
+ARG MEDIAWIKI_VERSION=1.43.8
+
 FROM alpine AS extensions
+ARG MEDIAWIKI_MAJOR_VERSION
 RUN mkdir -p /tmp/extensions /tmp/skins \
     && apk update \
     && apk add git \
@@ -9,9 +13,6 @@ RUN mkdir -p /tmp/extensions /tmp/skins \
     && git clone https://github.com/StarCitizenTools/mediawiki-skins-Citizen.git /tmp/skins/Citizen
 
 FROM composer:2 AS composer
-
-ENV MEDIAWIKI_MAJOR_VERSION=1.43
-ENV MEDIAWIKI_VERSION=1.43.8
 
 FROM mediawiki:${MEDIAWIKI_VERSION}
 COPY --from=composer /usr/bin/composer /usr/local/bin/composer
