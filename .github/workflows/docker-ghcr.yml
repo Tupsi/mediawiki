@@ -16,7 +16,7 @@ jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
@@ -29,6 +29,14 @@ jobs:
           VERSION=$(grep 'ARG MEDIAWIKI_VERSION=' Dockerfile | head -n 1 | cut -d '=' -f2 | tr -d '"' | tr -d ' ')
           echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
+
+      - name: Create GitHub Release
+        if: github.event_name != 'release' # Verhindert Ausführung, wenn der Trigger bereits ein Release war
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.mw_version }}
+          name: Release ${{ steps.get_version.outputs.mw_version }}
+          generate_release_notes: true # Generiert automatisch ein Changelog aus den Commits
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4
