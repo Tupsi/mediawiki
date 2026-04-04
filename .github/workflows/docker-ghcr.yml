@@ -26,7 +26,7 @@ jobs:
       - name: Extract Version from Dockerfile
         id: get_version
         run: |
-          VERSION=$(grep 'ENV MEDIAWIKI_VERSION=' Dockerfile | head -n 1 | cut -d '=' -f2 | tr -d '"' | tr -d ' ')
+          VERSION=$(grep 'ARG MEDIAWIKI_VERSION=' Dockerfile | head -n 1 | cut -d '=' -f2 | tr -d '"' | tr -d ' ')
           echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
 
