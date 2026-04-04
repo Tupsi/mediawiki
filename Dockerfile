@@ -1,3 +1,4 @@
+# version vom base image
 ARG MEDIAWIKI_BRANCH=REL1_43
 ARG MEDIAWIKI_VERSION=1.43.8
 
