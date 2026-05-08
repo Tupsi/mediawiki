@@ -1,34 +1,43 @@
-# version vom base image
 ARG MEDIAWIKI_BRANCH=REL1_43
 ARG MEDIAWIKI_VERSION=1.43.8
 
-FROM alpine AS extensions
+# Stage 1: Fetch extensions and skins
+FROM alpine AS fetcher
 ARG MEDIAWIKI_BRANCH
 RUN mkdir -p /tmp/extensions /tmp/skins \
     && apk update \
     && apk add git \
-    # Extensions
     && git clone -b ${MEDIAWIKI_BRANCH} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/Disambiguator /tmp/extensions/Disambiguator \
     && git clone -b ${MEDIAWIKI_BRANCH} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /tmp/extensions/NoTitle \
-    # Citizen Skin hinzufügen
     && git clone https://github.com/StarCitizenTools/mediawiki-skins-Citizen.git /tmp/skins/Citizen
 
-FROM composer:2 AS composer
+# Stage 2: Composer Builder
+FROM mediawiki:${MEDIAWIKI_VERSION} AS builder
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-FROM mediawiki:${MEDIAWIKI_VERSION}
-COPY --from=composer /usr/bin/composer /usr/local/bin/composer
-COPY composer.local.json /var/www/html/composer.local.json
-
-# Kopieren der Extensions
-COPY --chown=www-data:www-data --from=extensions /tmp/extensions /var/www/html/extensions/
-# Kopieren des Skins in das skins-Verzeichnis
-COPY --chown=www-data:www-data --from=extensions /tmp/skins/Citizen /var/www/html/skins/Citizen
+# Install necessary tools for composer
+RUN apt-get update && apt-get install -y zip unzip git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
+# Copy extensions and skins from fetcher
+COPY --from=fetcher /tmp/extensions /var/www/html/extensions/
+COPY --from=fetcher /tmp/skins/Citizen /var/www/html/skins/Citizen/
 
-RUN apt-get update && apt-get -y install zip unzip \
-    && composer config --global audit.block-insecure false \
-    && composer update --no-dev --no-audit --optimize-autoloader \
-    && chown -R www-data:www-data /var/www/html/extensions /var/www/html/skins/Citizen
+# Copy composer config
+COPY composer.local.json /var/www/html/composer.local.json
+
+# Run composer with security audits enabled
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer update --no-dev --optimize-autoloader
+
+# Stage 3: Final Production Image
+FROM mediawiki:${MEDIAWIKI_VERSION}
+
+WORKDIR /var/www/html
+
+# Copy generated and downloaded code from builder
+COPY --chown=www-data:www-data --from=builder /var/www/html/extensions /var/www/html/extensions/
+COPY --chown=www-data:www-data --from=builder /var/www/html/skins/Citizen /var/www/html/skins/Citizen/
+COPY --chown=www-data:www-data --from=builder /var/www/html/vendor /var/www/html/vendor/
+COPY --chown=www-data:www-data --from=builder /var/www/html/composer.local.json /var/www/html/composer.local.json
