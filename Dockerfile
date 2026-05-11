@@ -23,8 +23,10 @@ RUN composer update --no-dev --optimize-autoloader
 
 FROM dunglas/frankenphp:1-php8.3-alpine
 RUN install-php-extensions intl mysqli mbstring gd opcache
+RUN chown -R www-data:www-data /data/caddy /config/caddy
 WORKDIR /app/public
 COPY ./web/Caddyfile /etc/caddy/Caddyfile
 COPY ./web/Caddyfile /etc/frankenphp/Caddyfile
 # Copy the built MediaWiki files from the builder stage to the final image (/app/public is the document root for FrankenPHP)
 COPY --chown=www-data:www-data --from=builder /var/www/html/ /app/public/
+USER www-data
