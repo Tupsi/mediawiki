@@ -25,6 +25,7 @@ FROM dunglas/frankenphp:1-php8.3-alpine
 RUN install-php-extensions intl mysqli mbstring gd opcache
 WORKDIR /app/public
 COPY ./web/Caddyfile /etc/caddy/Caddyfile
+COPY ./web/Caddyfile /etc/frankenphp/Caddyfile
 COPY --chown=www-data:www-data --from=builder /var/www/html/extensions /app/public/extensions/
 COPY --chown=www-data:www-data --from=builder /var/www/html/skins/Citizen /app/public/skins/Citizen/
 COPY --chown=www-data:www-data --from=builder /var/www/html/vendor /app/public/vendor/
