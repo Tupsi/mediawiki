@@ -4,7 +4,7 @@
     order php_server before file_server
 }
 
-http://:80 {
+:80 {
     root * /app/public
     php_server
 

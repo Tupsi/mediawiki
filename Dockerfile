@@ -26,7 +26,5 @@ RUN install-php-extensions intl mysqli mbstring gd opcache
 WORKDIR /app/public
 COPY ./web/Caddyfile /etc/caddy/Caddyfile
 COPY ./web/Caddyfile /etc/frankenphp/Caddyfile
-COPY --chown=www-data:www-data --from=builder /var/www/html/extensions /app/public/extensions/
-COPY --chown=www-data:www-data --from=builder /var/www/html/skins/Citizen /app/public/skins/Citizen/
-COPY --chown=www-data:www-data --from=builder /var/www/html/vendor /app/public/vendor/
-COPY --chown=www-data:www-data --from=builder /var/www/html/composer.local.json /app/public/composer.local.json
+# Copy the built MediaWiki files from the builder stage to the final image (/app/public is the document root for FrankenPHP)
+COPY --chown=www-data:www-data --from=builder /var/www/html/ /app/public/
