@@ -5,8 +5,15 @@ on:
     types: [published]
   workflow_dispatch:
   push:
+    branches:
+      - main
+      - fpm
+      - frankenphp
     paths:
       - 'Dockerfile'
+      - 'Dockerfile.nginx'
+      - 'web/nginx.conf'
+      - 'web/Caddyfile'
 
 env:
   REGISTRY: ghcr.io
@@ -31,12 +38,13 @@ jobs:
         shell: bash
 
       - name: Create GitHub Release
-        if: github.event_name != 'release' # Verhindert Ausführung, wenn der Trigger bereits ein Release war
+        # Ausführung nur bei Push in den main-Branch und wenn es kein explizites Release ist
+        if: github.event_name != 'release' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.get_version.outputs.mw_version }}
           name: Release ${{ steps.get_version.outputs.mw_version }}
-          generate_release_notes: true # Generiert automatisch ein Changelog aus den Commits
+          generate_release_notes: true
 
       - name: Log in to the Container registry
         uses: docker/login-action@v4
@@ -51,8 +59,9 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ steps.get_version.outputs.mw_version }}
+            # latest und Versions-Tag werden nur für den Standard-Branch generiert
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.get_version.outputs.mw_version }},enable={{is_default_branch}}
             type=ref,event=tag
             type=ref,event=branch
 
