@@ -27,6 +27,9 @@ RUN chown -R www-data:www-data /data/caddy /config/caddy
 WORKDIR /app/public
 COPY ./web/Caddyfile /etc/caddy/Caddyfile
 COPY ./web/Caddyfile /etc/frankenphp/Caddyfile
+# fix formatting of Caddyfiles (remove tabs, ensure consistent indentation) to prevent Caddy from complaining about it
+RUN frankenphp fmt --overwrite /etc/caddy/Caddyfile && \
+    frankenphp fmt --overwrite /etc/frankenphp/Caddyfile
 # Copy the built MediaWiki files from the builder stage to the final image (/app/public is the document root for FrankenPHP)
 COPY --chown=www-data:www-data --from=builder /var/www/html/ /app/public/
 USER www-data
