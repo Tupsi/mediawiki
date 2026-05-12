@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Extract Version from Dockerfile
         id: get_version
@@ -40,7 +40,7 @@ jobs:
       - name: Create GitHub Release
         # Ausführung nur bei Push in den main-Branch und wenn es kein explizites Release ist
         if: github.event_name != 'release' && github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.get_version.outputs.mw_version }}
           name: Release ${{ steps.get_version.outputs.mw_version }}
