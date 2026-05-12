@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      # keine MediaWiki-Updates ab Version 1.44 aufwärts
+      - dependency-name: "mediawiki"
+        versions: [">= 1.44"]
+      # keine Major-Updates für FrankenPHP
+      - dependency-name: "dunglas/frankenphp"
+        versions: [">= 2"]
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "daily"
