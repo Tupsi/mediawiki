@@ -9,7 +9,7 @@ RUN mkdir -p /tmp/extensions /tmp/skins \
     && git clone -b ${MEDIAWIKI_BRANCH} --single-branch https://gerrit.wikimedia.org/r/mediawiki/extensions/NoTitle /tmp/extensions/NoTitle \
     && git clone https://github.com/StarCitizenTools/mediawiki-skins-Citizen.git /tmp/skins/Citizen
 
-FROM mediawiki:1.43.8-fpm-alpine AS builder
+FROM mediawiki:1.43.9-fpm-alpine AS builder
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 USER root
 RUN apk update && apk add --no-cache zip unzip git
