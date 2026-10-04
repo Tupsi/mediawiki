@@ -22,7 +22,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer update --no-dev --optimize-autoloader
 
 #FROM dunglas/frankenphp:1-php8.3-alpine
-FROM dunglas/frankenphp:1.12-php8-alpine
+FROM dunglas/frankenphp:1.13-php8-alpine
 RUN apk add --no-cache imagemagick && \
     install-php-extensions intl mysqli mbstring gd opcache
 RUN chown -R www-data:www-data /data/caddy /config/caddy
