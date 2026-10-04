@@ -42,5 +42,5 @@ jobs:
           context: ./1.43/fpm-alpine
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.version }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:1.43
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.version }}-fpm-alpine
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:1.43-fpm-alpine
