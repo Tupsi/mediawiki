@@ -32,8 +32,9 @@ jobs:
 
       - name: Extract Version from Dockerfile
         id: get_version
+#          VERSION=$(grep '^FROM mediawiki:' Dockerfile | head -n 1 | cut -d ':' -f2 | cut -d '-' -f1)
         run: |
-          VERSION=$(grep '^FROM mediawiki:' Dockerfile | head -n 1 | cut -d ':' -f2 | cut -d '-' -f1)
+          VERSION=$(grep '^FROM ghcr.io/tupsi/mediawiki-upstream:' Dockerfile | head -n 1 | cut -d ':' -f2 | cut -d '-' -f1)
           echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
 
