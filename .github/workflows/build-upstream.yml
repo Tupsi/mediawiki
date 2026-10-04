@@ -16,13 +16,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Extract MediaWiki Version
-        id: get_version
-        run: |
-          VERSION=$(grep -oP 'MEDIAWIKI_VERSION=\K[0-9\.]+' ./1.43/fpm-alpine/Dockerfile)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          
+    steps:    
       - name: Checkout Upstream Repository
         uses: actions/checkout@v4
         with:
@@ -35,6 +29,12 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract MediaWiki Version
+        id: get_version
+        run: |
+          VERSION=$(grep -oP 'MEDIAWIKI_VERSION=\K[0-9\.]+' ./1.43/fpm-alpine/Dockerfile)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Build and Push to GHCR
         uses: docker/build-push-action@v5
