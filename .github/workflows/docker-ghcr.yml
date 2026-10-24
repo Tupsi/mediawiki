@@ -1,6 +1,10 @@
 name: Build and Push Docker Image to GHCR
 
 on:
+  workflow_run:
+    workflows: ["Build Upstream MediaWiki"]
+    types:
+      - completed
   release:
     types: [published]
   workflow_dispatch:
