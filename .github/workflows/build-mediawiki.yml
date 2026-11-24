@@ -1,12 +1,12 @@
 name: Build MediaWiki
 
 on:
-  workflow_run:
-    workflows: ["Build Upstream MediaWiki"]
-    types:
-      - completed
-  release:
-    types: [published]
+#  workflow_run:
+#    workflows: ["Build Upstream MediaWiki"]
+#    types:
+#      - completed
+#  release:
+#    types: [published]
   workflow_dispatch:
   push:
     branches:
