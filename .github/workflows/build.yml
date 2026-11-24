@@ -31,7 +31,7 @@ jobs:
       - name: Extract Version from Dockerfile
         id: get_version
         run: |
-          VERSION=$(grep '^FROM ghcr.io/tupsi/mediawiki-upstream:' Docker.withUpstream | head -n 1 | cut -d ':' -f2 | cut -d '-' -f1)
+          VERSION=$(grep -oE '(MEDIAWIKI_VERSION)[[:space:]]*=[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+' Docker.withUpstream | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
           echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
 
