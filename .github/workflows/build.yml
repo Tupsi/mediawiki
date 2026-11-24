@@ -1,0 +1,77 @@
+name: Build MediaWiki
+
+on:
+  workflow_run:
+    workflows: ["Build MediaWiki with Plugins"]
+    types:
+      - completed
+  release:
+    types: [published]
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'Docker.withUpstream'
+      - 'composer.json'
+      - 'web/Caddyfile'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Extract Version from Dockerfile
+        id: get_version
+        run: |
+          VERSION=$(grep '^FROM ghcr.io/tupsi/mediawiki-upstream:' Docker.withUpstream | head -n 1 | cut -d ':' -f2 | cut -d '-' -f1)
+          echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Create GitHub Release
+        # Ausführung nur bei Push in den main-Branch und wenn es kein explizites Release ist
+        if: github.event_name != 'release' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.get_version.outputs.mw_version }}
+          name: Release ${{ steps.get_version.outputs.mw_version }}
+          generate_release_notes: true
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # latest und Versions-Tag werden nur für den Standard-Branch generiert
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ steps.get_version.outputs.mw_version }},enable={{is_default_branch}}
+            type=ref,event=tag
+            type=ref,event=branch
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: Docker.withUpstream
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
