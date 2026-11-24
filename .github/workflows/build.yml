@@ -1,10 +1,6 @@
 name: Build MediaWiki with Plugins
 
 on:
-  workflow_run:
-    workflows: ["Build MediaWiki with Plugins"]
-    types:
-      - completed
   release:
     types: [published]
   workflow_dispatch:
