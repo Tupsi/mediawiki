@@ -9,7 +9,7 @@ on:
       - main
       - dev
     paths:
-      - 'Docker.withUpstream'
+      - 'Dockerfile.withUpstream'
       - 'composer.json'
       - 'web/Caddyfile'
 
