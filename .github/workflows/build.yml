@@ -31,7 +31,7 @@ jobs:
       - name: Extract Version from Dockerfile
         id: get_version
         run: |
-          VERSION=$(grep -oE '(MEDIAWIKI_VERSION)[[:space:]]*=[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+' Docker.withUpstream | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+          VERSION=$(grep -oE '(MEDIAWIKI_VERSION)[[:space:]]*=[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+' Dockerfile.withUpstream | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
           echo "mw_version=${VERSION}" >> $GITHUB_OUTPUT
         shell: bash
 
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: Docker.withUpstream
+          file: Dockerfile.withUpstream
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
