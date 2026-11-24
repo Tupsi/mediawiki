@@ -1,4 +1,4 @@
-name: Build MediaWiki
+name: Build MediaWiki with Plugins
 
 on:
   workflow_run:
