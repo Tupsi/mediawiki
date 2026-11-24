@@ -1,8 +1,8 @@
 name: Build Upstream MediaWiki
 
 on:
-  schedule:
-    - cron: '0 3 * * *' # Täglicher Build um 03:00 Uhr
+#  schedule:
+#    - cron: '0 3 * * *' # Täglicher Build um 03:00 Uhr
   workflow_dispatch: # Ermöglicht manuelles Starten
 
 permissions:
