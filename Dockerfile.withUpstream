@@ -86,10 +86,8 @@ RUN set -eux; \
 
 CMD ["php-fpm"]
 
-ARG MEDIAWIKI_BRANCH=REL1_43
-
 FROM alpine AS fetcher
-ARG MEDIAWIKI_BRANCH
+ARG MEDIAWIKI_BRANCH=REL1_43
 RUN mkdir -p /tmp/extensions /tmp/skins \
 	&& apk update \
 	&& apk add git \
